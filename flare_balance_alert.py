@@ -61,12 +61,12 @@ def check_all_addresses(network: str, addresses: List[str]):
     for address in addresses:
         balance = get_balance(network, address)
         if balance == -1:
-            send_telegram_alert(f"❌ *Error* retrieving balance for `{address}` (request error)")
+            send_telegram_alert(f"❌ *Error* retrieving balance for `{address}` (request error on {NETWORK})")
         elif balance == -2:
-            send_telegram_alert(f"❗ *Invalid or non-existent address:* `{address}`")
+            send_telegram_alert(f"❗ *Invalid or non-existent address:* `{address}` (request error on {NETWORK})")
         elif balance < MIN_BALANCE:
             send_telegram_alert(
-                f"⚠️ `{address}` has only *{balance:.4f}* {network.upper()} (threshold: {MIN_BALANCE})"
+                f"⚠️ `{address}` has only *{balance:.4f}* {network.upper()} (threshold: {MIN_BALANCE} on {NETWORK})"
             )
         else:
             print(f"{address} OK: {balance:.4f} {network.upper()}")
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     try:
         check_all_addresses(NETWORK, ADDRESSES)
     except Exception as err:
-        send_telegram_alert(f"❌ General error in the script: {err}")
+        send_telegram_alert(f"❌ General error in the script: {err} on {NETWORK}")
         sys.exit(1)
 # send_telegram_alert("✅ *This is a test alert from the script.*")
 # This is a test alert from the script.
