@@ -71,6 +71,9 @@ def check_all_addresses(network: str, addresses: List[str]):
         else:
             print(f"{address} OK: {balance:.4f} {network.upper()}")
 
+        # Add delay to avoid hitting rate limits
+        time.sleep(3)
+
 # === Main entry point ===
 if __name__ == "__main__":
     try:
