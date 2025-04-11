@@ -78,5 +78,5 @@ if __name__ == "__main__":
     except Exception as err:
         send_telegram_alert(f"❌ General error in the script: {err}")
         sys.exit(1)
-send_telegram_alert("✅ *This is a test alert from the script.*")
+# send_telegram_alert("✅ *This is a test alert from the script.*")
 # This is a test alert from the script.
