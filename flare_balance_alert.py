@@ -26,21 +26,24 @@ def get_explorer_url(network: str) -> str:
         raise ValueError("Invalid network. Use 'flare' or 'songbird'.")
 
 # === Get wallet balance from explorer API ===
-def get_balance(network: str, address: str) -> float:
+def get_balance(network: str, address: str, retries: int = 3, delay: float = 1.0) -> float:
     base_url = get_explorer_url(network)
     endpoint = f"{base_url}/api?module=account&action=balance&address={address}"
-    try:
-        resp = requests.get(endpoint, timeout=10).json()
-        if resp.get("status") == "1":
-            return int(resp["result"]) / 10**18
-        elif resp.get("status") == "0":
-            # Address might not exist or be invalid
-            return -2
-        else:
-            return -1
-    except Exception as e:
-        print(f"Error retrieving balance for {address}: {e}")
-        return -1
+
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.get(endpoint, timeout=10).json()
+            if resp.get("status") == "1":
+                return int(resp["result"]) / 10**18
+            elif resp.get("status") == "0":
+                return -2  # invalid or non-existent address
+        except Exception as e:
+            print(f"Attempt {attempt} failed for {address}: {e}")
+        if attempt < retries:
+            time.sleep(delay)
+
+    return -1  # all attempts failed
+
 
 def send_telegram_alert(message: str):
     print(f"Sending Telegram alert: {message}")
