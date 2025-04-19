@@ -26,7 +26,7 @@ def get_explorer_url(network: str) -> str:
         raise ValueError("Invalid network. Use 'flare' or 'songbird'.")
 
 # === Get wallet balance from explorer API ===
-def get_balance(network: str, address: str, retries: int = 3, delay: float = 1.0) -> float:
+def get_balance(network: str, address: str, retries: int = 5, delay: float = 2.0) -> float:
     base_url = get_explorer_url(network)
     endpoint = f"{base_url}/api?module=account&action=balance&address={address}"
 
